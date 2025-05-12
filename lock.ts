@@ -1,5 +1,6 @@
 import { Asset, deserializeAddress, mConStr0 } from "@meshsdk/core";
 import { getScript, getTxBuilder, wallet } from "./common";
+import { blockchainProvider } from "./common";
  
 async function main() {
   // these are the assets we want to lock into the contract
@@ -12,6 +13,9 @@ async function main() {
  
   // get utxo and wallet address
   const utxos = await wallet.getUtxos();
+
+  // const utxos = await blockchainProvider.fetchUTxOs(wallet.getUsedAddresses()[0]);
+  console.log(`UTxOs: ${JSON.stringify(utxos)}`);
   const walletAddress = (await wallet.getUsedAddresses())[0];
  
   const { scriptAddr } = getScript();
@@ -26,7 +30,6 @@ async function main() {
     .txOutDatumHashValue(mConStr0([signerHash])) // provide the datum where `"constructor": 0`
     .changeAddress(walletAddress) // send change back to the wallet address
     .selectUtxosFrom(utxos)
-    .setNetwork('preprod')
     .complete();
   const unsignedTx = txBuilder.txHex;
  
@@ -36,4 +39,3 @@ async function main() {
 }
  
 main();
-

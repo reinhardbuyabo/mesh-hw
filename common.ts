@@ -7,9 +7,17 @@ import {
   UTxO,
 } from "@meshsdk/core";
 import { applyParamsToScript } from "@meshsdk/core-csl";
+import dotenv from "dotenv";
 import blueprint from "./plutus.json";
+
+dotenv.config()
  
-const blockchainProvider = new BlockfrostProvider(process.env.BLOCKFROST_PROJECT_ID!);
+if (!process.env.BLOCKFROST_PROJECT_ID) {
+  throw new Error("BLOCKFROST_PROJECT_ID is not defined in the environment variables.");
+}
+
+export const blockchainProvider = new BlockfrostProvider(process.env.BLOCKFROST_PROJECT_ID);
+// import blueprint from "./plutus.json";
  
 // wallet for signing transactions
 export const wallet = new MeshWallet({
@@ -21,7 +29,7 @@ export const wallet = new MeshWallet({
     bech32: fs.readFileSync("me.sk").toString(),
   },
 });
- 
+
 export function getScript() {
   const scriptCbor = applyParamsToScript(
     blueprint.validators[0].compiledCode,
@@ -34,7 +42,7 @@ export function getScript() {
  
   return { scriptCbor, scriptAddr };
 }
- 
+
 // reusable function to get a transaction builder
 export function getTxBuilder() {
   return new MeshTxBuilder({
@@ -51,4 +59,3 @@ export async function getUtxoByTxHash(txHash: string): Promise<UTxO> {
   }
   return utxos[0];
 }
-

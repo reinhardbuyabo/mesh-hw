@@ -22,7 +22,7 @@ validator hello_world {
 
     expect Some(Datum { owner }) = datum
 
-    let must_say_hello = redeemer.msg == "Hello, John Doe!"
+    let must_say_hello = redeemer.msg == "Unlocking funds..."
 
     let must_be_signed = list.has(transaction.extra_signatories, owner)
 
@@ -40,7 +40,7 @@ test hello_world_example() {
   let datum =
     Datum { owner: #"00000000000000000000000000000000000000000000000000000000" }
  
-  let redeemer = Redeemer { msg: "Hello, John Doe!" } // redeemer requirements
+  let redeemer = Redeemer { msg: "Unlocking funds..." } // redeemer requirements
  
   let placeholder_utxo = OutputReference { transaction_id: "", output_index: 0 }
  
